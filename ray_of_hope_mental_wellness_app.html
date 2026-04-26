@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ray of Hope</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--sky:#e8f4fd;--sky2:#d0e9f9;--lavender:#ede8f9;--lav2:#d8ccf5;
+--sage:#e4f2ec;--peach:#fdf0ea;--gold:#f5e6c8;
+--deep:#1a2340;--mid:#3d4f6b;--muted:#6b7a94;--light:#9ba8be;
+--white:#ffffff;--surface:#f7f9fc;--card:#ffffff;
+--accent1:#5b8de8;--accent2:#8b5cf6;--accent3:#0ea5a0;
+--accent4:#e8734a;--accent5:#d4a843;
+--shadow:0 4px 24px rgba(26,35,64,.08);--shadow2:0 8px 40px rgba(26,35,64,.13);
+}
+body{font-family:'DM Sans',sans-serif;background:#f7f9fc;color:var(--deep);overflow-x:hidden}
+h1,h2,h3{font-family:'Fraunces',serif}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(247,249,252,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(91,141,232,.12);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:400;color:var(--deep);display:flex;align-items:center;gap:.5rem}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:inline-block}
+.nav-links{display:flex;gap:.25rem}
+.nav-links button{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--muted);cursor:pointer;padding:.5rem .8rem;border-radius:8px;transition:all .2s}
+.nav-links button:hover,.nav-links button.active{color:var(--accent1);background:var(--sky)}
+.nav-toggle{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--deep)}
+
+/* SECTIONS */
+section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.section-tag{font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent1);margin-bottom:.75rem}
+.section-title{font-size:2.2rem;font-weight:400;color:var(--deep);margin-bottom:1rem;line-height:1.2}
+.section-sub{font-size:1rem;color:var(--muted);max-width:560px;line-height:1.7;margin-bottom:2.5rem}
+
+/* HERO */
+#home{padding-top:8rem;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;max-width:100%;margin:0}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#e8f4fd 0%,#ede8f9 40%,#e4f2ec 100%);z-index:0}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5;animation:float 8s ease-in-out infinite}
+.orb1{width:400px;height:400px;background:radial-gradient(circle,#a8c8f0,transparent);top:-100px;right:-100px}
+.orb2{width:300px;height:300px;background:radial-gradient(circle,#c4aff0,transparent);bottom:-80px;left:-80px;animation-delay:-4s}
+.hero-inner{max-width:1100px;margin:0 auto;padding:0 2rem;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.hero-tag{display:inline-flex;align-items:center;gap:.5rem;background:white;border:1px solid rgba(91,141,232,.2);border-radius:20px;padding:.35rem 1rem;font-size:.8rem;color:var(--accent2);margin-bottom:1.5rem}
+.hero-tag span{width:6px;height:6px;border-radius:50%;background:var(--accent2);display:inline-block;animation:pulse 2s infinite}
+.hero-title{font-size:3rem;font-weight:400;line-height:1.15;color:var(--deep);margin-bottom:1rem}
+.hero-title em{font-style:italic;color:var(--accent2)}
+.hero-sub{font-size:1.05rem;color:var(--muted);line-height:1.7;margin-bottom:2rem;max-width:480px}
+.btn-primary{background:var(--deep);color:white;border:none;padding:.85rem 1.8rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-primary:hover{background:var(--accent1);transform:translateY(-1px);box-shadow:var(--shadow2)}
+.btn-outline{background:white;color:var(--deep);border:1.5px solid rgba(26,35,64,.15);padding:.85rem 1.8rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;cursor:pointer;transition:all .2s;margin-left:1rem}
+.btn-outline:hover{border-color:var(--accent1);color:var(--accent1)}
+.hero-visual{display:flex;flex-direction:column;gap:1rem}
+.hero-card{background:white;border-radius:16px;padding:1.25rem;box-shadow:var(--shadow);border:1px solid rgba(91,141,232,.1)}
+.hero-stat{font-size:1.8rem;font-weight:400;font-family:'Fraunces',serif;color:var(--accent1)}
+.hero-stat-label{font-size:.8rem;color:var(--muted);margin-top:.25rem}
+.hero-mood{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem}
+.mood-pill{background:var(--sky);color:var(--accent1);border-radius:20px;padding:.3rem .8rem;font-size:.78rem;font-weight:500}
+
+/* CARDS GRID */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.25rem}
+.card{background:var(--card);border-radius:16px;padding:1.5rem;box-shadow:var(--shadow);border:1px solid rgba(26,35,64,.05);transition:all .25s;cursor:pointer}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow2)}
+.card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem}
+.card-title{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:400;color:var(--deep);margin-bottom:.5rem}
+.card-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:1rem}
+.card-btn{font-size:.8rem;color:var(--accent1);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;display:inline-flex;align-items:center;gap:.3rem}
+.card-btn:hover{color:var(--accent2)}
+
+/* FILTER TABS */
+.filter-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.filter-tab{background:white;border:1.5px solid rgba(26,35,64,.1);color:var(--muted);border-radius:20px;padding:.4rem 1rem;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.filter-tab.active,.filter-tab:hover{background:var(--accent1);border-color:var(--accent1);color:white}
+
+/* CHAT */
+#chatbot-section{background:linear-gradient(135deg,var(--sky),var(--lavender));border-radius:24px;margin:2rem;padding:0;overflow:hidden;box-shadow:var(--shadow2)}
+.chat-wrap{display:grid;grid-template-columns:280px 1fr;height:600px}
+.chat-sidebar{background:white;padding:1.5rem;border-right:1px solid rgba(26,35,64,.06)}
+.chat-sidebar h3{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:400;margin-bottom:1rem}
+.chat-feature{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem 0;border-bottom:1px solid rgba(26,35,64,.05)}
+.chat-feature:last-child{border-bottom:none}
+.chat-feat-icon{width:32px;height:32px;border-radius:8px;background:var(--sky);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.chat-feat-text{font-size:.8rem;color:var(--muted);line-height:1.5}
+.chat-feat-title{font-size:.85rem;font-weight:500;color:var(--deep);margin-bottom:.2rem}
+.chat-main{display:flex;flex-direction:column;background:#f7f9fc}
+.chat-header{background:white;padding:1rem 1.5rem;border-bottom:1px solid rgba(26,35,64,.06);display:flex;align-items:center;gap:.75rem}
+.chat-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:white;font-size:.85rem}
+.chat-status{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:.3rem}
+.messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem}
+.msg{max-width:75%;padding:.85rem 1.1rem;border-radius:18px;font-size:.88rem;line-height:1.6;animation:fadeUp .3s ease}
+.msg.ai{background:white;border-bottom-left-radius:4px;color:var(--deep);box-shadow:var(--shadow);align-self:flex-start}
+.msg.user{background:var(--accent1);color:white;border-bottom-right-radius:4px;align-self:flex-end}
+.msg-label{font-size:.7rem;color:var(--muted);margin-bottom:.25rem}
+.msg.user+.msg-label{text-align:right}
+.emotion-badge{display:inline-flex;align-items:center;gap:.3rem;background:var(--lavender);color:var(--accent2);border-radius:12px;padding:.2rem .6rem;font-size:.72rem;margin-top:.5rem}
+.resource-chip{display:inline-flex;align-items:center;gap:.3rem;background:var(--sage);color:var(--accent3);border-radius:20px;padding:.25rem .7rem;font-size:.75rem;cursor:pointer;margin:.25rem .2rem .25rem 0;border:none;font-family:'DM Sans',sans-serif}
+.chat-input-area{padding:1rem 1.5rem;background:white;border-top:1px solid rgba(26,35,64,.06);display:flex;gap:.75rem}
+.chat-input{flex:1;border:1.5px solid rgba(26,35,64,.1);border-radius:12px;padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--deep);outline:none;resize:none}
+.chat-input:focus{border-color:var(--accent1)}
+.send-btn{background:var(--accent1);color:white;border:none;border-radius:12px;padding:.75rem 1.2rem;cursor:pointer;font-size:1rem;transition:all .2s}
+.send-btn:hover{background:var(--accent2)}
+.quick-replies{padding:.5rem 1.5rem;display:flex;gap:.5rem;flex-wrap:wrap;background:white}
+.qr{background:var(--sky);color:var(--accent1);border:none;border-radius:20px;padding:.35rem .85rem;font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.qr:hover{background:var(--accent1);color:white}
+
+/* ARTICLES */
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem}
+.article-card{background:white;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(26,35,64,.05);transition:all .25s}
+.article-card:hover{transform:translateY(-4px);box-shadow:var(--shadow2)}
+.article-thumb{height:140px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative;overflow:hidden}
+.article-body{padding:1.25rem}
+.article-tag{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;font-weight:500;color:var(--accent1);margin-bottom:.4rem}
+.article-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:400;color:var(--deep);margin-bottom:.4rem;line-height:1.4}
+.article-desc{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:.8rem}
+.article-meta{font-size:.75rem;color:var(--light);display:flex;gap:1rem}
+
+/* VIDEOS */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+.video-card{background:white;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all .25s}
+.video-card:hover{transform:translateY(-4px);box-shadow:var(--shadow2)}
+.video-thumb{position:relative;aspect-ratio:16/9;background:#1a2340;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.video-thumb img{width:100%;height:100%;object-fit:cover;opacity:.8}
+.play-btn{position:absolute;width:48px;height:48px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--deep);transition:all .2s}
+.video-card:hover .play-btn{transform:scale(1.1);background:white}
+.video-info{padding:1rem}
+.video-cat{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent3);font-weight:500;margin-bottom:.3rem}
+.video-title{font-size:.9rem;font-weight:500;color:var(--deep);line-height:1.4;margin-bottom:.3rem}
+.video-dur{font-size:.78rem;color:var(--muted)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,35,64,.7);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:white;border-radius:20px;width:90%;max-width:680px;overflow:hidden;box-shadow:0 20px 80px rgba(26,35,64,.25)}
+.modal-header{padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(26,35,64,.06)}
+.modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--sky);color:var(--deep)}
+.modal-body{padding:1.25rem}
+.video-frame{width:100%;aspect-ratio:16/9;border:none;border-radius:12px;background:#000}
+
+/* PODCASTS */
+.podcast-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+.podcast-card{background:white;border-radius:16px;padding:1.25rem;box-shadow:var(--shadow);border:1px solid rgba(26,35,64,.05);display:flex;gap:1rem;align-items:flex-start;transition:all .25s}
+.podcast-card:hover{transform:translateY(-3px);box-shadow:var(--shadow2)}
+.podcast-art{width:72px;height:72px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+.podcast-cat{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent2);font-weight:500;margin-bottom:.25rem}
+.podcast-title{font-family:'Fraunces',serif;font-size:.95rem;font-weight:400;color:var(--deep);margin-bottom:.35rem}
+.podcast-desc{font-size:.8rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem}
+.play-pill{display:inline-flex;align-items:center;gap:.4rem;background:var(--deep);color:white;border:none;border-radius:20px;padding:.35rem .9rem;font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.play-pill:hover{background:var(--accent1)}
+
+/* EXPERTS */
+.experts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem}
+.expert-card{background:white;border-radius:20px;padding:1.75rem 1.5rem;text-align:center;box-shadow:var(--shadow);border:1px solid rgba(26,35,64,.05);transition:all .25s}
+.expert-card:hover{transform:translateY(-4px);box-shadow:var(--shadow2)}
+.expert-avatar{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1rem;font-weight:500}
+.expert-name{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:400;color:var(--deep);margin-bottom:.2rem}
+.expert-role{font-size:.82rem;color:var(--accent1);margin-bottom:.25rem}
+.expert-spec{font-size:.78rem;color:var(--muted);margin-bottom:1.25rem}
+.expert-rating{font-size:.8rem;color:var(--accent5);margin-bottom:1rem}
+.connect-btn{background:var(--sky);color:var(--accent1);border:1.5px solid rgba(91,141,232,.2);border-radius:10px;padding:.55rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s;width:100%}
+.connect-btn:hover{background:var(--accent1);color:white;border-color:var(--accent1)}
+
+/* DARK MODE */
+body.dark{background:#0f1420;--deep:#e8edf5;--mid:#b0bbd0;--muted:#7a8da8;--surface:#1a2340;--card:#1e2a45;--white:#1e2a45;--sky:#1e2a45;--sky2:#253050;--lavender:#231e40;--sage:#182a2a}
+body.dark nav{background:rgba(15,20,32,.9);border-color:rgba(91,141,232,.1)}
+body.dark .chat-sidebar,body.dark .chat-header,body.dark .chat-main,body.dark .chat-input-area,.dark .quick-replies{background:var(--card)}
+body.dark .msg.ai{background:#253050}
+body.dark section:not(#home){background:transparent}
+.dark-toggle{background:none;border:1.5px solid rgba(26,35,64,.15);border-radius:20px;padding:.35rem .8rem;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:.4rem;font-family:'DM Sans',sans-serif;color:var(--muted);transition:all .2s}
+.dark-toggle:hover{border-color:var(--accent1);color:var(--accent1)}
+
+/* ANIMATIONS */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0;transform:translateY(20px);transition:all .5s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* FOOTER */
+footer{background:var(--deep);color:rgba(255,255,255,.5);text-align:center;padding:2rem;font-size:.82rem}
+footer strong{color:white}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+.hero-inner{grid-template-columns:1fr;gap:2rem}
+.hero-title{font-size:2rem}
+.hero-visual{display:none}
+.nav-links{display:none}
+.nav-toggle{display:block}
+.chat-wrap{grid-template-columns:1fr;height:auto}
+.chat-sidebar{display:none}
+.chat-wrap{height:500px;grid-template-rows:1fr}
+section{padding:3.5rem 1.25rem}
+.section-title{font-size:1.7rem}
+.btn-outline{margin-left:.5rem;margin-top:.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="logo"><span class="logo-dot"></span>Ray of Hope</div>
+  <div class="nav-links" id="navLinks">
+    <button class="active" onclick="showSection('home')">Home</button>
+    <button onclick="showSection('chatbot')">Chatbot</button>
+    <button onclick="showSection('articles')">Articles</button>
+    <button onclick="showSection('videos')">Videos</button>
+    <button onclick="showSection('podcasts')">Podcasts</button>
+    <button onclick="showSection('experts')">Experts</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <button class="dark-toggle" onclick="toggleDark()" id="darkBtn">🌙 Dark</button>
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" style="padding-top:0;min-height:100vh;position:relative;overflow:hidden">
+  <div class="hero-bg"></div>
+  <div class="orb1 hero-orb"></div>
+  <div class="orb2 hero-orb"></div>
+  <div class="hero-inner" style="padding-top:120px;padding-bottom:80px">
+    <div>
+      <div class="hero-tag"><span></span>AI-Powered Emotional Support</div>
+      <h1 class="hero-title">Find your <em>inner strength</em> and navigate life's challenges</h1>
+      <p class="hero-sub">A compassionate space where AI meets human understanding. Get personalized support, curated resources, and connect with experts — all in one calming place.</p>
+      <div>
+        <button class="btn-primary" onclick="showSection('chatbot')">✨ Start Chat</button>
+        <button class="btn-outline" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Explore Resources →</button>
+      </div>
+      <div style="display:flex;gap:2rem;margin-top:2.5rem;flex-wrap:wrap">
+        <div><div style="font-size:1.5rem;font-family:'Fraunces',serif;color:var(--accent1)">12k+</div><div style="font-size:.78rem;color:var(--muted)">Lives touched</div></div>
+        <div><div style="font-size:1.5rem;font-family:'Fraunces',serif;color:var(--accent2)">98%</div><div style="font-size:.78rem;color:var(--muted)">Feel heard</div></div>
+        <div><div style="font-size:1.5rem;font-family:'Fraunces',serif;color:var(--accent3)">24/7</div><div style="font-size:.78rem;color:var(--muted)">Available</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card" style="display:flex;gap:1rem;align-items:center">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:white;font-size:.95rem;flex-shrink:0">🌿</div>
+        <div><div style="font-size:.82rem;font-weight:500;color:var(--deep)">How are you feeling today?</div><div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Your AI companion is ready to listen</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="hero-card"><div class="hero-stat">∞</div><div class="hero-stat-label">Resources available</div></div>
+        <div class="hero-card"><div class="hero-stat" style="color:var(--accent2)">Safe</div><div class="hero-stat-label">Judgment-free zone</div></div>
+      </div>
+      <div class="hero-card">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:.6rem">Mood tracker</div>
+        <div class="hero-mood">
+          <span class="mood-pill">😊 Better</span>
+          <span class="mood-pill" style="background:var(--lavender);color:var(--accent2)">😌 Calm</span>
+          <span class="mood-pill" style="background:var(--sage);color:var(--accent3)">💪 Hopeful</span>
+          <span class="mood-pill" style="background:var(--peach);color:var(--accent4)">🌟 Growing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section id="categories" class="fade-up">
+  <div class="section-tag">What we support</div>
+  <h2 class="section-title">What's on your mind?</h2>
+  <p class="section-sub">Every challenge deserves care. Select a category to discover tailored resources and support.</p>
+  <div class="cards-grid">
+    <div class="card" onclick="filterArticles('relationships')">
+      <div class="card-icon" style="background:#fdf0ea">💑</div>
+      <div class="card-title">Relationship Issues</div>
+      <div class="card-desc">Navigate love, family dynamics, friendships, and the art of setting healthy boundaries.</div>
+      <button class="card-btn">Explore →</button>
+    </div>
+    <div class="card" onclick="filterArticles('mental-health')">
+      <div class="card-icon" style="background:#ede8f9">🧠</div>
+      <div class="card-title">Mental Health</div>
+      <div class="card-desc">Understanding anxiety, depression, and building a resilient, peaceful mind.</div>
+      <button class="card-btn">Explore →</button>
+    </div>
+    <div class="card" onclick="filterArticles('transitions')">
+      <div class="card-icon" style="background:#e4f2ec">🌱</div>
+      <div class="card-title">Life Transitions</div>
+      <div class="card-desc">Career shifts, loss, new beginnings — finding clarity during life's pivotal moments.</div>
+      <button class="card-btn">Explore →</button>
+    </div>
+    <div class="card" onclick="filterArticles('finance')">
+      <div class="card-icon" style="background:#f5e6c8">💸</div>
+      <div class="card-title">Financial Stress</div>
+      <div class="card-desc">Coping with financial pressure, rebuilding security, and reframing your worth.</div>
+      <button class="card-btn">Explore →</button>
+    </div>
+  </div>
+</section>
+
+<!-- CHATBOT -->
+<div style="padding:2rem 0">
+<div id="chatbot-section" class="fade-up">
+  <div class="chat-wrap">
+    <div class="chat-sidebar">
+      <h3>Your companion</h3>
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:1.25rem">Always here to listen, never to judge.</div>
+      <div class="chat-feature">
+        <div class="chat-feat-icon">🎯</div>
+        <div><div class="chat-feat-title">Emotion Detection</div><div class="chat-feat-text">Recognizes your feelings from how you write</div></div>
+      </div>
+      <div class="chat-feature">
+        <div class="chat-feat-icon">📚</div>
+        <div><div class="chat-feat-title">Smart Resources</div><div class="chat-feat-text">Suggests articles, videos & experts based on your needs</div></div>
+      </div>
+      <div class="chat-feature">
+        <div class="chat-feat-icon">🔒</div>
+        <div><div class="chat-feat-title">Private & Safe</div><div class="chat-feat-text">Your conversations stay with you</div></div>
+      </div>
+      <div class="chat-feature">
+        <div class="chat-feat-icon">⭐</div>
+        <div><div class="chat-feat-title">24/7 Support</div><div class="chat-feat-text">Available whenever you need to talk</div></div>
+      </div>
+    </div>
+    <div class="chat-main" id="chatMain">
+      <div class="chat-header">
+        <div class="chat-avatar">🌿</div>
+        <div>
+          <div style="font-weight:500;font-size:.9rem;color:var(--deep)">Sage <span class="chat-status"></span><span style="font-size:.75rem;color:#22c55e">Online</span></div>
+          <div style="font-size:.75rem;color:var(--muted)">Your AI wellness companion</div>
+        </div>
+      </div>
+      <div class="messages" id="messages">
+        <div>
+          <div class="msg-label">Sage</div>
+          <div class="msg ai">Hello 🌸 I'm Sage, your wellness companion. I'm here to listen without judgment. How are you feeling today? You can share anything on your mind.</div>
+        </div>
+      </div>
+      <div class="quick-replies" id="quickReplies">
+        <button class="qr" onclick="sendQuick('I feel anxious')">I feel anxious</button>
+        <button class="qr" onclick="sendQuick('Relationship troubles')">Relationship troubles</button>
+        <button class="qr" onclick="sendQuick('Feeling hopeless')">Feeling hopeless</button>
+        <button class="qr" onclick="sendQuick('Work stress')">Work stress</button>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-input" id="chatInput" rows="1" placeholder="Share what's on your mind..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ARTICLES -->
+<section id="articles-section" class="fade-up">
+  <div class="section-tag">Read & reflect</div>
+  <h2 class="section-title">Personalized articles</h2>
+  <p class="section-sub">Thoughtfully curated reads to help you understand yourself better and take the next step forward.</p>
+  <div class="filter-tabs" id="articleFilters">
+    <button class="filter-tab active" onclick="filterArticles('all')">All</button>
+    <button class="filter-tab" onclick="filterArticles('mental-health')">Mental Health</button>
+    <button class="filter-tab" onclick="filterArticles('relationships')">Relationships</button>
+    <button class="filter-tab" onclick="filterArticles('transitions')">Life Transitions</button>
+    <button class="filter-tab" onclick="filterArticles('finance')">Financial Wellness</button>
+  </div>
+  <div class="articles-grid" id="articlesGrid"></div>
+</section>
+
+<!-- VIDEOS -->
+<section id="videos-section" class="fade-up" style="background:linear-gradient(135deg,var(--sky),var(--lavender));border-radius:24px;margin:0 2rem;max-width:none;padding:3.5rem 2.5rem">
+  <div class="section-tag">Watch & grow</div>
+  <h2 class="section-title">Video library</h2>
+  <p class="section-sub">Expert talks, therapeutic techniques, and stories of transformation — all in one place.</p>
+  <div class="filter-tabs" id="videoFilters">
+    <button class="filter-tab active" onclick="filterVideos('all')">All</button>
+    <button class="filter-tab" onclick="filterVideos('therapy')">Therapy Techniques</button>
+    <button class="filter-tab" onclick="filterVideos('interviews')">Expert Interviews</button>
+    <button class="filter-tab" onclick="filterVideos('stories')">Motivational Stories</button>
+  </div>
+  <div class="video-grid" id="videosGrid"></div>
+</section>
+
+<!-- PODCASTS -->
+<section id="podcasts-section" class="fade-up">
+  <div class="section-tag">Listen & heal</div>
+  <h2 class="section-title">Podcast recommendations</h2>
+  <p class="section-sub">Curated audio journeys for mindfulness, positive psychology, and personal growth.</p>
+  <div class="filter-tabs" id="podcastFilters">
+    <button class="filter-tab active" onclick="filterPodcasts('all')">All</button>
+    <button class="filter-tab" onclick="filterPodcasts('mindfulness')">Mindfulness</button>
+    <button class="filter-tab" onclick="filterPodcasts('psychology')">Positive Psychology</button>
+    <button class="filter-tab" onclick="filterPodcasts('self-improvement')">Self-Improvement</button>
+  </div>
+  <div class="podcast-grid" id="podcastsGrid"></div>
+</section>
+
+<!-- EXPERTS -->
+<section id="experts-section" class="fade-up">
+  <div class="section-tag">Connect with professionals</div>
+  <h2 class="section-title">Expert support</h2>
+  <p class="section-sub">Real humans who care. Connect with therapists, life coaches, and support communities.</p>
+  <div class="filter-tabs" id="expertFilters">
+    <button class="filter-tab active" onclick="filterExperts('all')">All</button>
+    <button class="filter-tab" onclick="filterExperts('therapist')">Therapists</button>
+    <button class="filter-tab" onclick="filterExperts('coach')">Life Coaches</button>
+    <button class="filter-tab" onclick="filterExperts('group')">Support Groups</button>
+  </div>
+  <div class="experts-grid" id="expertsGrid"></div>
+</section>
+
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="videoModal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-weight:400" id="modalTitle"></div>
+        <div style="font-size:.78rem;color:var(--muted)" id="modalCat"></div>
+      </div>
+      <button class="modal-close" onclick="closeVideoModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe class="video-frame" id="videoFrame" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="font-size:1.1rem;font-family:'Fraunces',serif;margin-bottom:.5rem"><strong>Ray of Hope</strong></div>
+  <div>A safe space for emotional wellness • Always here for you</div>
+  <div style="margin-top:.75rem;font-size:.75rem;opacity:.6">This platform provides supportive resources and is not a substitute for professional medical advice.</div>
+</footer>
+
+<script>
+const articles=[
+  {id:1,cat:'mental-health',tag:'Mental Health',title:'Understanding Anxiety: A Gentle Guide',desc:'Learn to recognize anxiety patterns and discover science-backed strategies to find calm.',thumb:'😰',bg:'#ede8f9',time:'5 min read',date:'Jan 2025'},
+  {id:2,cat:'relationships',tag:'Relationships',title:'Setting Boundaries with Love',desc:'Boundaries are acts of self-respect. Here\'s how to set them without guilt.',thumb:'💞',bg:'#fdf0ea',time:'4 min read',date:'Feb 2025'},
+  {id:3,cat:'transitions',tag:'Life Transitions',title:'When Everything Changes at Once',desc:'Navigating multiple life changes simultaneously and finding your footing.',thumb:'🌊',bg:'#e8f4fd',time:'6 min read',date:'Mar 2025'},
+  {id:4,cat:'finance',tag:'Financial Wellness',title:'Money Stress is Real — And Manageable',desc:'Practical steps to reduce financial anxiety and rebuild a sense of security.',thumb:'🌱',bg:'#f5e6c8',time:'5 min read',date:'Jan 2025'},
+  {id:5,cat:'mental-health',tag:'Mental Health',title:'The Quiet Power of Self-Compassion',desc:'Why being kind to yourself is the foundation of all healing.',thumb:'🌸',bg:'#e4f2ec',time:'4 min read',date:'Feb 2025'},
+  {id:6,cat:'relationships',tag:'Relationships',title:'Grief After Losing a Relationship',desc:'Loss comes in many forms. This is how to mourn and move forward.',thumb:'🕊',bg:'#ede8f9',time:'7 min read',date:'Mar 2025'},
+  {id:7,cat:'transitions',tag:'Life Transitions',title:'Starting Over at Any Age',desc:'New beginnings aren\'t just for the young. Reinvention is always possible.',thumb:'⭐',bg:'#fdf0ea',time:'5 min read',date:'Jan 2025'},
+  {id:8,cat:'mental-health',tag:'Mental Health',title:'Sleep and Mental Wellness',desc:'The profound link between rest and emotional resilience — and how to improve both.',thumb:'🌙',bg:'#e8f4fd',time:'4 min read',date:'Feb 2025'},
+];
+
+const videos=[
+  {id:'kyzPMKSBaV8',cat:'therapy',category:'Therapy Techniques',title:'Breathing Techniques for Instant Calm',dur:'8:32'},
+  {id:'O-6f5wQXSu8',cat:'therapy',category:'Therapy Techniques',title:'CBT Basics: Changing Negative Thoughts',dur:'12:15'},
+  {id:'inpok4MKVVM',cat:'therapy',category:'Therapy Techniques',title:'5-Minute Mindfulness Meditation',dur:'5:22'},
+  {id:'m1vaUGtyo-A',cat:'interviews',category:'Expert Interviews',title:'Dr. Brené Brown on Vulnerability',dur:'18:44'},
+  {id:'_rEKMOaQijQ',cat:'interviews',category:'Expert Interviews',title:'The Science of Happiness — Expert Talk',dur:'22:10'},
+  {id:'ZToicYcHIOU',cat:'stories',category:'Motivational Stories',title:'Finding Hope After Loss — A Story',dur:'14:58'},
+  {id:'4pLUleLdwY4',cat:'stories',category:'Motivational Stories',title:'Overcoming Depression: Real Stories',dur:'16:20'},
+  {id:'rkZl2gsLUp4',cat:'therapy',category:'Therapy Techniques',title:'Grounding Techniques for Anxiety',dur:'9:47'},
+];
+
+const podcasts=[
+  {cat:'mindfulness',category:'Mindfulness',title:'The Daily Meditation Podcast',desc:'Short, guided meditations for every morning. Start each day with intention and peace.',emoji:'🧘',bg:'#e4f2ec',link:'#'},
+  {cat:'psychology',category:'Positive Psychology',title:'The Happiness Lab',desc:'Dr. Laurie Santos explores the science behind happiness and how to find it.',emoji:'😊',bg:'#ede8f9',link:'#'},
+  {cat:'self-improvement',category:'Self-Improvement',title:'Unlocking Us with Brené Brown',desc:'Conversations that illuminate the experiences that make us human.',emoji:'🔓',bg:'#fdf0ea',link:'#'},
+  {cat:'mindfulness',category:'Mindfulness',title:'Calm Masterclass',desc:'World-class teachers guide you through mindfulness, sleep, and emotional health.',emoji:'🌿',bg:'#e8f4fd',link:'#'},
+  {cat:'psychology',category:'Positive Psychology',title:'The Anxiety Coaches Podcast',desc:'Practical strategies and real talk about managing anxiety in everyday life.',emoji:'💬',bg:'#f5e6c8',link:'#'},
+  {cat:'self-improvement',category:'Self-Improvement',title:'On Being with Krista Tippett',desc:'Conversations about the human spirit, meaning-making, and becoming more whole.',emoji:'✨',bg:'#e4f2ec',link:'#'},
+];
+
+const experts=[
+  {cat:'therapist',role:'Therapist',name:'Dr. Amara Patel',spec:'Anxiety & Depression',rating:'⭐⭐⭐⭐⭐',sessions:'500+',initials:'AP',bg:'#e8f4fd',color:'#5b8de8'},
+  {cat:'therapist',role:'Therapist',name:'Dr. Sofia Chen',spec:'Trauma & PTSD',rating:'⭐⭐⭐⭐⭐',sessions:'750+',initials:'SC',bg:'#ede8f9',color:'#8b5cf6'},
+  {cat:'coach',role:'Life Coach',name:'Marcus Williams',spec:'Career & Life Transitions',rating:'⭐⭐⭐⭐',sessions:'300+',initials:'MW',bg:'#e4f2ec',color:'#0ea5a0'},
+  {cat:'coach',role:'Life Coach',name:'Priya Sharma',spec:'Relationships & Self-Love',rating:'⭐⭐⭐⭐⭐',sessions:'450+',initials:'PS',bg:'#fdf0ea',color:'#e8734a'},
+  {cat:'group',role:'Support Group',name:'Anxiety Warriors Circle',spec:'Weekly group sessions — Free',rating:'⭐⭐⭐⭐⭐',sessions:'Open',initials:'AW',bg:'#f5e6c8',color:'#d4a843'},
+  {cat:'group',role:'Support Group',name:'Grief & Loss Community',spec:'Bi-weekly online meetups',rating:'⭐⭐⭐⭐⭐',sessions:'Open',initials:'GL',bg:'#e4f2ec',color:'#0ea5a0'},
+];
+
+const aiResponses={
+  anxiety:["I can hear that anxiety is weighing on you right now. 💙 That feeling of worry is your mind working overtime to protect you. Let's take a breath together — try inhaling for 4 counts, holding for 4, exhaling for 4. How does that feel?",null,['Breathing Techniques','CBT Exercises','Anxiety Articles'],'Anxious'],
+  sad:["It's okay to feel sad. 🌧️ Sadness is a valid emotion, and you don't need to rush through it. Would you like to talk about what's making you feel this way? I'm here to listen without judgment.","Feeling sad or low",['Grief Resources','Therapist Support','Mindfulness Videos'],'Sad'],
+  hopeless:["I hear you, and I'm really glad you reached out. 💜 When things feel hopeless, it can be hard to see a way forward — but you're not alone in this. Can you tell me a little more about what's been happening?","Feeling hopeless",['Crisis Resources','Expert Support','Community Groups'],'Hopeless'],
+  stress:["Work and life pressure can feel absolutely crushing. 😔 Your feelings are completely valid. Let's figure out some practical ways to create a little breathing room. What's feeling most overwhelming right now?","Work/life stress",['Stress Management','Podcast: Anxiety Coaches','Mindfulness Exercises'],'Stressed'],
+  relationship:["Relationship challenges can touch the deepest parts of us. 💗 Whether it's conflict, distance, or loss — these are real, painful experiences. What kind of support would help most right now?","Relationship difficulties",['Relationship Articles','Expert: Priya Sharma','Setting Boundaries Guide'],'Emotional'],
+  lonely:["Loneliness is one of the most human feelings there is — and one of the hardest. 🌿 The fact that you're reaching out shows incredible courage. You don't have to carry this alone.",null,['Community Support','Connection Resources','Expert Coaches'],'Lonely'],
+  default:["Thank you for sharing that with me. 🌸 It takes courage to reach out. Can you tell me a bit more about what's been on your mind? I want to make sure I understand what you're going through so I can best support you.",null,null,null],
+};
+
+function detectEmotion(text){
+  const t=text.toLowerCase();
+  if(/anxious|anxiety|panic|worried|fear|scared|nervous/.test(t))return 'anxiety';
+  if(/sad|cry|crying|unhappy|miserable|depressed/.test(t))return 'sad';
+  if(/hopeless|worthless|give up|can\'t go on|no point/.test(t))return 'hopeless';
+  if(/stress|overwhelm|burnout|exhausted|too much/.test(t))return 'stress';
+  if(/relationship|partner|girlfriend|boyfriend|husband|wife|family|friend/.test(t))return 'relationship';
+  if(/lonely|alone|isolated|no one/.test(t))return 'lonely';
+  return 'default';
+}
+
+function renderMessages(msgs){
+  const container=document.getElementById('messages');
+  container.innerHTML='';
+  msgs.forEach(m=>{
+    const wrap=document.createElement('div');
+    if(m.role==='ai'){
+      const label=document.createElement('div');label.className='msg-label';label.textContent='Sage';
+      const msg=document.createElement('div');msg.className='msg ai';msg.innerHTML=m.text;
+      if(m.emotion){const badge=document.createElement('div');badge.className='emotion-badge';badge.innerHTML='🎯 Detected: '+m.emotion;msg.appendChild(badge);}
+      if(m.resources){const rd=document.createElement('div');rd.style.marginTop='.5rem';m.resources.forEach(r=>{const b=document.createElement('button');b.className='resource-chip';b.innerHTML='📎 '+r;rd.appendChild(b);});msg.appendChild(rd);}
+      wrap.appendChild(label);wrap.appendChild(msg);
+    } else {
+      const msg=document.createElement('div');msg.className='msg user';msg.textContent=m.text;
+      wrap.style.display='flex';wrap.style.justifyContent='flex-end';
+      wrap.appendChild(msg);
+    }
+    container.appendChild(wrap);
+  });
+  container.scrollTop=container.scrollHeight;
+}
+
+let chatHistory=[{role:'ai',text:'Hello 🌸 I\'m Sage, your wellness companion. I\'m here to listen without judgment. How are you feeling today?'}];
+try{const saved=localStorage.getItem('roh_chat');if(saved)chatHistory=JSON.parse(saved);}catch(e){}
+renderMessages(chatHistory);
+
+function sendMessage(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text)return;
+  chatHistory.push({role:'user',text});
+  renderMessages(chatHistory);
+  input.value='';input.style.height='auto';
+  setTimeout(()=>{
+    const emotion=detectEmotion(text);
+    const [reply,,resources,detectedEmotion]=aiResponses[emotion];
+    const aiMsg={role:'ai',text:reply,emotion:detectedEmotion,resources};
+    chatHistory.push(aiMsg);
+    try{localStorage.setItem('roh_chat',JSON.stringify(chatHistory));}catch(e){}
+    renderMessages(chatHistory);
+  },900);
+}
+
+function sendQuick(text){document.getElementById('chatInput').value=text;sendMessage();}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+
+function renderArticles(filter){
+  const grid=document.getElementById('articlesGrid');
+  const filtered=filter==='all'?articles:articles.filter(a=>a.cat===filter);
+  grid.innerHTML=filtered.map(a=>`
+    <div class="article-card">
+      <div class="article-thumb" style="background:${a.bg}">${a.thumb}</div>
+      <div class="article-body">
+        <div class="article-tag">${a.tag}</div>
+        <div class="article-title">${a.title}</div>
+        <div class="article-desc">${a.desc}</div>
+        <div class="article-meta"><span>${a.time}</span><span>${a.date}</span></div>
+        <button class="card-btn" style="margin-top:.75rem">Read More →</button>
+      </div>
+    </div>`).join('');
+}
+
+function filterArticles(cat){
+  document.querySelectorAll('#articleFilters .filter-tab').forEach(b=>b.classList.remove('active'));
+  event&&event.target.classList.add('active');
+  renderArticles(cat);
+  showSection('articles');
+}
+
+function renderVideos(filter){
+  const grid=document.getElementById('videosGrid');
+  const filtered=filter==='all'?videos:videos.filter(v=>v.cat===filter);
+  grid.innerHTML=filtered.map(v=>`
+    <div class="video-card" onclick="openVideo('${v.id}','${v.title}','${v.category}')">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="${v.title}" onerror="this.style.display='none'">
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <div class="video-cat">${v.category}</div>
+        <div class="video-title">${v.title}</div>
+        <div class="video-dur">⏱ ${v.dur}</div>
+      </div>
+    </div>`).join('');
+}
+
+function filterVideos(cat){
+  document.querySelectorAll('#videoFilters .filter-tab').forEach(b=>b.classList.remove('active'));
+  event&&event.target.classList.add('active');
+  renderVideos(cat);
+}
+
+function openVideo(id,title,cat){
+  document.getElementById('videoModal').classList.add('open');
+  document.getElementById('videoFrame').src=`https://www.youtube.com/embed/${id}?autoplay=1`;
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalCat').textContent=cat;
+}
+
+function closeVideoModal(){
+  document.getElementById('videoModal').classList.remove('open');
+  document.getElementById('videoFrame').src='';
+}
+
+function closeModal(e){if(e.target.id==='videoModal')closeVideoModal();}
+
+function renderPodcasts(filter){
+  const grid=document.getElementById('podcastsGrid');
+  const filtered=filter==='all'?podcasts:podcasts.filter(p=>p.cat===filter);
+  grid.innerHTML=filtered.map(p=>`
+    <div class="podcast-card">
+      <div class="podcast-art" style="background:${p.bg}">${p.emoji}</div>
+      <div style="flex:1">
+        <div class="podcast-cat">${p.category}</div>
+        <div class="podcast-title">${p.title}</div>
+        <div class="podcast-desc">${p.desc}</div>
+        <button class="play-pill">▶ Listen Now</button>
+      </div>
+    </div>`).join('');
+}
+
+function filterPodcasts(cat){
+  document.querySelectorAll('#podcastFilters .filter-tab').forEach(b=>b.classList.remove('active'));
+  event&&event.target.classList.add('active');
+  renderPodcasts(cat);
+}
+
+function renderExperts(filter){
+  const grid=document.getElementById('expertsGrid');
+  const filtered=filter==='all'?experts:experts.filter(e=>e.cat===filter);
+  grid.innerHTML=filtered.map(e=>`
+    <div class="expert-card">
+      <div class="expert-avatar" style="background:${e.bg};color:${e.color}">${e.initials}</div>
+      <div class="expert-name">${e.name}</div>
+      <div class="expert-role">${e.role}</div>
+      <div class="expert-spec" style="color:var(--muted)">${e.spec}</div>
+      <div class="expert-rating">${e.rating}</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:1rem">${e.sessions} sessions</div>
+      <button class="connect-btn">Connect →</button>
+    </div>`).join('');
+}
+
+function filterExperts(cat){
+  document.querySelectorAll('#expertFilters .filter-tab').forEach(b=>b.classList.remove('active'));
+  event&&event.target.classList.add('active');
+  renderExperts(cat);
+}
+
+renderArticles('all');
+renderVideos('all');
+renderPodcasts('all');
+renderExperts('all');
+
+const sectionMap={
+  home:'home',
+  chatbot:'chatbot-section',
+  articles:'articles-section',
+  videos:'videos-section',
+  podcasts:'podcasts-section',
+  experts:'experts-section',
+};
+
+function showSection(key){
+  const el=document.getElementById(sectionMap[key]||key);
+  if(el){setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);}
+  document.querySelectorAll('.nav-links button').forEach((b,i)=>{
+    const keys=Object.keys(sectionMap);
+    b.classList.toggle('active',keys[i]===key);
+  });
+}
+
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const dark=document.body.classList.contains('dark');
+  document.getElementById('darkBtn').textContent=dark?'☀ Light':'🌙 Dark';
+}
+
+let navOpen=false;
+function toggleNav(){
+  navOpen=!navOpen;
+  const nl=document.getElementById('navLinks');
+  if(navOpen){
+    nl.style.display='flex';nl.style.flexDirection='column';nl.style.position='fixed';
+    nl.style.top='64px';nl.style.left='0';nl.style.right='0';
+    nl.style.background='rgba(247,249,252,.98)';nl.style.padding='1rem';
+    nl.style.borderBottom='1px solid rgba(91,141,232,.12)';nl.style.zIndex='99';
+  } else {
+    nl.style.display='none';
+  }
+}
+
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:.1});
+document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
